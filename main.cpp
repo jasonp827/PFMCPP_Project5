@@ -17,10 +17,10 @@ Purpose:  This project continues developing Project3.
         make the destructors do something like print out the name of the class.
 
  3) add 2 new UDTs that use only the types you copied above as member variables.
- 
+
  4) add 2 member functions that use your member variables to each of these new UDTs
 
- 5) Add destructors to these 2 new types that do stuff.  
+ 5) Add constructors and destructors to these 2 new types that do stuff.  
         maybe print out the name of the class being destructed, or call a member function of one of the members.  be creative
  
  6) copy over your main() from the end of Project3 and get it to compile with the types you copied over.
