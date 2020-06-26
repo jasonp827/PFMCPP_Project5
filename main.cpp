@@ -203,20 +203,20 @@ std::vector<int> CVSequencer::revArp(std::vector<int> noteOrder)
  new UDT 4:
  with 2 member functions
  */
- struct Tone
- {
-     Tone();
-     ~Tone();
-     Oscillator triangleCore;
-     Filter sem20;
+struct Tone
+{
+Tone();
+~Tone();
+Oscillator triangleCore;
+Filter sem20;
 
-     void changeTone();
- };
+void changeTone();
+};
 
- void Tone::changeTone()
-     {
-         sem20.filterType = (sem20.filterType++)%3;
-     }
+void Tone::changeTone()
+{
+    sem20.filterType = (sem20.filterType++)%3;
+}
 
 Tone::Tone()
 {}
@@ -231,16 +231,16 @@ Tone::~Tone()
  new UDT 5:
  with 2 member functions
  */
- struct MelodyPlayer
- {
-     MelodyPlayer();
-     ~MelodyPlayer();
-     Oscillator triangleCore;
-     CVSequencer voltageBlock;
+struct MelodyPlayer
+{
+MelodyPlayer();
+~MelodyPlayer();
+Oscillator triangleCore;
+CVSequencer voltageBlock;
 
-     void playArp();
-     void modWaveShape();
- };
+void playArp();
+void modWaveShape();
+};
 
 MelodyPlayer::MelodyPlayer()
 {}
