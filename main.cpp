@@ -207,7 +207,7 @@ struct Tone
     Oscillator triangleCore;
     Filter sem20;
 
-void changeTone();
+    void changeTone();
 };
 
 void Tone::changeTone()
