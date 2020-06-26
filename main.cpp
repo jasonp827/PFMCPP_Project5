@@ -77,8 +77,7 @@ void Oscillator::resetPhase()
 }
 
 void Oscillator::hardSync(std::vector<double> inputSignal)
-{
-   
+{ 
     for (unsigned long i = 0; i < inputSignal.size(); ++i)
     {
         if (inputSignal[i] == 0.0)
@@ -114,7 +113,6 @@ struct Filter
     void changeResonance(float change);
     void trackPitch(float cv);
     void modFilter(float cv);
-
 };
 
 Filter::Filter()
@@ -129,9 +127,10 @@ std::vector<float> Filter::movingAvrgFilter(std::vector<float> signal)
     for (unsigned long i = 0; i < signal.size(); ++i)
     {
         signal[i] = (signal[i] + signal[i-1] + signal[i-2] + signal[i-3])/4;
-    }// for loop iterates through signal and applies a moving average to the samples
+    }
     return signal;
 }
+
 void Filter::changeResonance(float change)
 {
     resonance += change;
@@ -144,9 +143,7 @@ void Filter::trackPitch(float cv)
 
 void Filter::modFilter(float cv)
 {
-    //fmAttenuator works between values of 0.0f and 1.0f
     cutoff += cv * fmAttenuator;
-    
 }
 
 /*
@@ -168,9 +165,9 @@ struct CVSequencer
 };
 
 CVSequencer::CVSequencer() :
-cvChannels(8),
-outputLevel(0),
-scale(2)
+    cvChannels(8),
+    outputLevel(0),
+    scale(2)
 {}
 
 CVSequencer::~CVSequencer()
@@ -205,10 +202,10 @@ std::vector<int> CVSequencer::revArp(std::vector<int> noteOrder)
  */
 struct Tone
 {
-Tone();
-~Tone();
-Oscillator triangleCore;
-Filter sem20;
+    Tone();
+    ~Tone();
+    Oscillator triangleCore;
+    Filter sem20;
 
 void changeTone();
 };
@@ -233,13 +230,13 @@ Tone::~Tone()
  */
 struct MelodyPlayer
 {
-MelodyPlayer();
-~MelodyPlayer();
-Oscillator triangleCore;
-CVSequencer voltageBlock;
+    MelodyPlayer();
+    ~MelodyPlayer();
+    Oscillator triangleCore;
+    CVSequencer voltageBlock;
 
-void playArp();
-void modWaveShape();
+    void playArp();
+    void modWaveShape();
 };
 
 MelodyPlayer::MelodyPlayer()
