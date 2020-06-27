@@ -29,6 +29,7 @@ Create a branch named Part2
  example:
  */
 #include <iostream>
+#include <vector>
 namespace Example
 {
     //a User-Defined Type
@@ -62,7 +63,6 @@ namespace Example
     }
 }
 
-
 /*
  copied UDT 1:
  */
@@ -81,6 +81,7 @@ struct Oscillator
     void hardSync(std::vector<double> inputSignal);
     void receivePitchCV(std::vector<int> sequence);
     void resetPhase();
+    void memberFunc();
 };
 
 Oscillator::Oscillator() :
@@ -124,6 +125,10 @@ void Oscillator::receivePitchCV(std::vector<int> sequence)
     std::cout << "\n";
 }
 
+void Oscillator::memberFunc()
+{
+    std::cout << "Osc hardSynced! Phase on this sample is reset: phase = " << this->phase << "\n\n";
+}
 /*
  copied UDT 2:
  */
@@ -173,7 +178,6 @@ void Filter::modFilter(float cv)
 {
     cutoff += cv * fmAttenuator;
 }
-
 /*
  copied UDT 3:
  */
@@ -190,6 +194,8 @@ struct CVSequencer
     void changeNumSteps(int newNumSteps);
     void divideClock(int division);
     std::vector<int> revArp(std::vector<int> noteOrder);
+    void memberFunc();
+
 };
 
 CVSequencer::CVSequencer() :
@@ -222,6 +228,17 @@ std::vector<int> CVSequencer::revArp(std::vector<int> noteOrder)
         revArp.push_back(noteOrder[i]);
     }
     return revArp;
+}
+
+void CVSequencer::memberFunc()
+{
+    std::vector<int> revArp = this->revArp({1,7,8,1});
+    std::cout << "This Reversed arp: ";
+    for(unsigned long i = 0; i < revArp.size(); ++i)
+    {
+        std::cout << revArp[i];
+    }
+    std::cout << "\n";
 }
 
 /*
@@ -310,7 +327,8 @@ int main()
     Filter sem20, ladderFilter;
     CVSequencer voltageBlock;
     sto.hardSync({1, 1, 1, 0, 1, 1, 1, 0});
-    std::cout << "hardSynced! Phase on this sample is reset: phase = " << sto.phase << "\n\n";
+    std::cout << "hardSynced! Phase on this sample is reset: phase = " << sto.phase << "\n";
+    sto.memberFunc();
     ladderFilter.movingAvrgFilter({2.32f, 23.2f, 86.3f, 43.1f, 92.6f, 123.0f, 62.5f, 53.9f, 24.2f});
     std::vector<int> revArp = voltageBlock.revArp({1,2,3,4});
     std::cout << "Reversed arp: ";
@@ -319,7 +337,8 @@ int main()
         std::cout << revArp[i];
     }
     std::cout << "\n";
-    std::cout << "good to go!";
+    voltageBlock.memberFunc();
+    std::cout << "good to go!\n";
 
     Tone tone;
     MelodyPlayer melodyplayer;
