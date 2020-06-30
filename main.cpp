@@ -39,7 +39,14 @@ You don't have to do this, you can keep your current object name and just change
  8) After you finish, click the [run] button.  Clear up any errors or warnings as best you can.
  
  see here for an example: https://repl.it/@matkatmusic/ch3p04example
+
+ you can safely ignore any warnings about exit-time-destructors.
+ if you would like to suppress them, add -Wno-exit-time-destructors to the .replit file 
+   with the other warning suppression flags
  */
+
+
+
 
 
 #include <vector>
