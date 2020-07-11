@@ -20,9 +20,9 @@ Create a branch named Part3
     This means if you had something like the following in your main() previously: 
 */
 #if false
- Axe axe;
- std::cout << "axe sharpness: " << axe.sharpness << "\n";
- #endif
+Axe axe;
+std::cout << "axe sharpness: " << axe.sharpness << "\n";
+#endif
  /*
     you would update that to use your wrappers:
     
@@ -45,11 +45,9 @@ You don't have to do this, you can keep your current object name and just change
    with the other warning suppression flags
  */
 
-
-
-
-
 #include <vector>
+#include <string>
+#include "LeakedObjectDetector.h"
 #include <iostream>
 /*
  copied UDT 1:
@@ -70,6 +68,8 @@ struct Oscillator
     void receivePitchCV(std::vector<int> sequence);
     void resetPhase();
     void memberFunc();
+
+    JUCE_LEAK_DETECTOR(Oscillator)
 };
 
 Oscillator::Oscillator() :
@@ -117,6 +117,16 @@ void Oscillator::memberFunc()
 {
     std::cout << "Osc hardSynced! Phase on this sample is reset: phase = " << this->phase << "\n\n";
 }
+
+struct OscillatorWrapper
+{
+    OscillatorWrapper(Oscillator* ptr): oscillatorPtr(ptr){}
+    ~OscillatorWrapper()
+    {
+        delete oscillatorPtr;
+    }
+    Oscillator* oscillatorPtr = nullptr;
+};
 /*
  copied UDT 2:
  */
@@ -134,6 +144,8 @@ struct Filter
     void changeResonance(float change);
     void trackPitch(float cv);
     void modFilter(float cv);
+
+    JUCE_LEAK_DETECTOR(Filter)
 };
 
 Filter::Filter()
@@ -166,6 +178,16 @@ void Filter::modFilter(float cv)
 {
     cutoff += cv * fmAttenuator;
 }
+
+struct FilterWrapper
+{
+    FilterWrapper(Filter* ptr): filterPtr(ptr){}
+    ~FilterWrapper()
+    {
+        delete filterPtr;
+    }
+    Filter* filterPtr = nullptr;
+};
 /*
  copied UDT 3:
  */
@@ -184,6 +206,7 @@ struct CVSequencer
     std::vector<int> revArp(std::vector<int> noteOrder);
     void memberFunc();
 
+    JUCE_LEAK_DETECTOR(CVSequencer)
 };
 
 CVSequencer::CVSequencer() :
@@ -229,6 +252,16 @@ void CVSequencer::memberFunc()
     std::cout << "\n";
 }
 
+struct CVSequencerWrapper
+{
+    CVSequencerWrapper(CVSequencer* ptr):cvSequencerPtr(ptr){}
+    ~CVSequencerWrapper()
+    {
+        delete cvSequencerPtr;
+    }
+    CVSequencer* cvSequencerPtr = nullptr;
+};
+
 /*
  new UDT 4:
  with 2 member functions
@@ -241,6 +274,8 @@ struct Tone
     Filter sem20;
 
     void changeTone();
+
+    JUCE_LEAK_DETECTOR(Tone)
 };
 
 void Tone::changeTone()
@@ -257,6 +292,16 @@ Tone::~Tone()
     std::cout << "Tone\n";
 }
 
+struct ToneWrapper
+{
+    ToneWrapper(Tone* ptr): tonePtr(ptr){}
+    ~ToneWrapper()
+    {
+        delete tonePtr;
+    }
+    Tone* tonePtr = nullptr;
+};
+
 /*
  new UDT 5:
  with 2 member functions
@@ -270,6 +315,8 @@ struct MelodyPlayer
 
     void playArp();
     void modWaveShape();
+
+    JUCE_LEAK_DETECTOR(MelodyPlayer)
 };
 
 MelodyPlayer::MelodyPlayer()
@@ -294,6 +341,16 @@ void MelodyPlayer::modWaveShape()
     }
 }
 
+struct MelodyPlayerWrapper
+{
+    MelodyPlayerWrapper(MelodyPlayer* ptr): melodyPlayerPtr(ptr){}
+    ~MelodyPlayerWrapper()
+    {
+        delete melodyPlayerPtr;
+    }
+    MelodyPlayer* melodyPlayerPtr = nullptr;
+};
+
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
@@ -311,23 +368,24 @@ void MelodyPlayer::modWaveShape()
 #include <iostream>
 int main()
 {
-    Oscillator sto, csL;
-    Filter sem20, ladderFilter;
-    CVSequencer voltageBlock;
-    sto.hardSync({1, 1, 1, 0, 1, 1, 1, 0});
-    std::cout << "hardSynced! Phase on this sample is reset: phase = " << sto.phase << "\n";
-    sto.memberFunc();
-    ladderFilter.movingAvrgFilter({2.32f, 23.2f, 86.3f, 43.1f, 92.6f, 123.0f, 62.5f, 53.9f, 24.2f});
-    std::vector<int> revArp = voltageBlock.revArp({1,2,3,4});
+    OscillatorWrapper sto(new Oscillator()), csL(new Oscillator());
+    FilterWrapper sem20(new Filter()), ladderFilter(new Filter());
+    CVSequencerWrapper voltageBlock(new CVSequencer());
+
+    sto.oscillatorPtr->hardSync({1, 1, 1, 0, 1, 1, 1, 0});
+    std::cout << "hardSynced! Phase on this sample is reset: phase = " << sto.oscillatorPtr->phase << "\n";
+    sto.oscillatorPtr->memberFunc();
+    ladderFilter.filterPtr->movingAvrgFilter({2.32f, 23.2f, 86.3f, 43.1f, 92.6f, 123.0f, 62.5f, 53.9f, 24.2f});
+    std::vector<int> revArp = voltageBlock.cvSequencerPtr->revArp({1,2,3,4});
     std::cout << "Reversed arp: ";
     for(unsigned long i = 0; i < revArp.size(); ++i)
     {
         std::cout << revArp[i];
     }
     std::cout << "\n";
-    voltageBlock.memberFunc();
+    voltageBlock.cvSequencerPtr->memberFunc();
     std::cout << "good to go!\n";
 
-    Tone tone;
-    MelodyPlayer melodyplayer;
+    ToneWrapper tone(new Tone());
+    MelodyPlayerWrapper melodyplayer(new MelodyPlayer());
 }
