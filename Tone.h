@@ -1,10 +1,8 @@
 #pragma once
 
-#include <iostream>
 #include "Oscillator.h"
 #include "Filter.h"
 #include "LeakedObjectDetector.h"
-
 
 struct Tone
 {

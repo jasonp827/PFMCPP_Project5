@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 struct Oscillator;
 struct Filter;
 struct CVSequencer;

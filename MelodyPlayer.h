@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include "Oscillator.h"
 #include "CVSequencer.h"
 #include "LeakedObjectDetector.h"
